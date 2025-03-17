@@ -24,12 +24,12 @@
 #   made available to any other person or organization.
 #
 ################################################################################
-PROJECT				= $(lastword $(subst /, ,$(shell pwd)))
-PLATFORM 			= $(shell uname)
-TARGET				= $(strip $(if $(MAKECMDGOALS), $(MAKECMDGOALS), release))
+PROJECT			= $(lastword $(subst /, ,$(shell pwd)))
+PLATFORM 		= $(shell uname)
+TARGET			= $(strip $(if $(MAKECMDGOALS), $(MAKECMDGOALS), release))
 
-DATE				= $(shell date "+%b %d, %Y")
-TIME				= $(shell date "+%H:%M:%S")
+DATE			= $(shell date "+%b %d, %Y")
+TIME			= $(shell date "+%H:%M:%S")
 
 COMPANY			= Linkage Design
 LICENSE_FILE	= LICENSE
@@ -53,10 +53,10 @@ TEST_LOCATION 		= $(HOME)/Library/Application\ Support/Blender/$(BLENDER_VERSION
 BUILD_FILES		 	= $(wildcard $(BUILD_LOCATION)/*)
 SOURCE_FILES        = $(wildcard $(SOURCE_LOCATION)/*)
 
-VPATH				:= $(BUILD_LOCATION) $(SOURCE_LOCATION) $(DIST_LOCATION)
-
-
 #  Define the VPATH
+VPATH				= $(BUILD_LOCATION) $(SOURCE_LOCATION) $(DIST_LOCATION)
+
+
 ################################################################################
 #
 #	Blender Manifest Definitions
@@ -74,7 +74,7 @@ BL_TYPE				= "add-on"
 BL_TAGS				= ["Object"]
 BL_VERSION_MIN		= "4.2.0"
 BL_LICENSE			= ["SPDX:GPL-3.0-or-later"]
-BL_WEBSITE			= "https://blendermarket.com/products/linkage-object-aligner"
+BL_WEBSITE			= "https://blendermarket.com/products/linkage-custom-top-view"
 BL_COPYRIGHT		= ["2024 $(COMPANY)"]
 
 
