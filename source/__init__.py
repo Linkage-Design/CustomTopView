@@ -1,24 +1,50 @@
-import bpy
-from mathutils import Quaternion
-from bpy.types import Operator, Panel, PropertyGroup
-from bpy.props import BoolProperty, PointerProperty
+################################################################################
+#
+#   __init__.py
+#
+################################################################################
+#
+#   DESCRIPTION
+#       This add-on is used to align the view to a true orthographic top view
+#
+#   AUTHOR(S)
+#       Josh Kirkpatrick
+#       Jayme Wilkinson
+#
+#   CREATED
+#       Oct 2024
+#
+################################################################################
+#
+#   Copyright (C) 2024 Linkage Design
+#
+#   The software and information contained herein are proprietary to, and
+#   comprise valuable trade secrets of Linkage Design, whom intends
+#   to preserve as trade secrets such software and information. This software
+#   and information or any other copies thereof may not be provided or
+#   otherwise made available to any other person or organization.
+#
+################################################################################
+import  bpy
+import  mathutils
 
-bl_info = {
-    "name": "Linkage Custom Top View",
-    "author": "Linkage Design",
-    "version": (0, 5),
-    "blender": (4, 2, 0),
-    "description": "Demonstrates setting a custom oriented top view",
-    "category": "Object",
-}
 
-class VIEW3D_OT_CustomTopView(Operator):
-    bl_idname = "view3d.custom_top_view"
-    bl_label = "Align to Custom Top View"
-    bl_description = "Align the viewport to the custom top view with X axis down and Y axis right"
-    bl_options = {'REGISTER', 'UNDO'}    
-    
+################################################################################
+#
+#   class VIEW3D_OT_CustomTopView(bpy.types.Operator):
+#
+################################################################################
+class VIEW3D_OT_CustomTopView(bpy.types.Operator):
+    bl_idname       = "view3d.custom_top_view"
+    bl_label        = "Align to Custom Top View"
+    bl_description  = "Align the viewport to the custom top view with X axis down and Y axis right"
+    bl_options      = {'REGISTER', 'UNDO'}
+
     def execute(self, context):
+        '''
+        DESCRIPTION
+
+        '''
         for area in bpy.context.screen.areas:
             if area.type == "VIEW_3D":
                 break
@@ -28,50 +54,111 @@ class VIEW3D_OT_CustomTopView(Operator):
                 break
 
         space = area.spaces[0]
-                
         r3d = space.region_3d
-        if(context.scene.view_align_props.force_ortho):
+
+        if context.scene.view_align_props.force_ortho:
             r3d.view_perspective = "ORTHO"
-        #default - look down z-axis
-        r3d.view_rotation = Quaternion((0.7071068, 0, 0, 0.7071068))
+
+        r3d.view_rotation = mathutils.Quaternion((0.7071068, 0, 0, 0.7071068))
+
         return {'FINISHED'}
 
 
-class VIEW3D_PT_CustomTopViewPanel(Panel):
-    bl_label = "Linkage Custom Top View"
-    bl_idname = "VIEW3D_PT_custom_top_view"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'Linkage'
+################################################################################
+#
+#   class VIEW3D_OT_CustomTopView(bpy.types.Panel):
+#
+################################################################################
+class VIEW3D_PT_CustomTopViewPanel(bpy.types.Panel):
+    bl_label        = "Linkage Custom Top View"
+    bl_idname       = "VIEW3D_PT_custom_top_view"
+    bl_space_type   = 'VIEW_3D'
+    bl_region_type  = 'UI'
+    bl_category     = 'Linkage Design'
 
     def draw(self, context):
+        '''
+        DESCRIPTION
+            This method is called by Blender to draw a panel to display options
+            for this tool.
+
+        ARGUMENTS
+            context     (in)    The current context from Blender
+
+        RETURN
+            None
+        '''
+        #   Get view_align_props from the scene context
         view_align_props = context.scene.view_align_props
+
+        #   Create a layout for our panel
         layout = self.layout
+
+        #   Draw the elements of our panel in the layout
         row = layout.row()
         row.prop(view_align_props, "force_ortho")
         row = layout.row()
         row.operator("view3d.custom_top_view", icon='CAMERA_DATA')
 
-class TopViewProperties(PropertyGroup):
-    force_ortho: BoolProperty(name="Force Orthographic View", default=True)
-    
-classes = [
-    VIEW3D_PT_CustomTopViewPanel,
-    VIEW3D_OT_CustomTopView,
-    TopViewProperties,
-]
+
+################################################################################
+#
+#   class VIEW3D_OT_CustomTopView(bpy.types.PropertyGroup):
+#
+################################################################################
+class TopViewProperties(bpy.types.PropertyGroup):
+    force_ortho: bpy.props.BoolProperty(name="Force Orthographic View", default=True) # type: ignore
+
+
+################################################################################
+#
+#    Funtions and data to register and unregister the classes of this Add-on
+#
+################################################################################
+classes = [ VIEW3D_PT_CustomTopViewPanel,
+            VIEW3D_OT_CustomTopView,
+            TopViewProperties ]
 
 def register():
+    '''
+    DESCTIPTION
+        This method is used by Blender to register the components of this
+        Add-On.
+
+    ARGUMENTS
+        None
+
+    RETURN
+        None
+    '''
     for cls in classes:
         bpy.utils.register_class(cls)
-    
-    bpy.types.Scene.view_align_props = PointerProperty(type=TopViewProperties)
+
+    bpy.types.Scene.view_align_props = bpy.props.PointerProperty(type=TopViewProperties)
+
 
 def unregister():
+    '''
+    DESCRIPTION
+        This method is used by Blender to unregister the components we
+        registered in this Add-On's register method.
+
+    ARGUMENTS
+        None
+
+    RETURN
+        None
+    '''
     for cls in classes:
         bpy.utils.unregister_class(cls)
+
     if bpy.types.Scene.view_align_props:
         del bpy.types.Scene.view_align_props
 
+###############################################################################
+#
+#   This is the main registration entrypoint for this Add-On
+#
+###############################################################################
 if __name__ == "__main__":
     register()
