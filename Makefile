@@ -11,14 +11,14 @@
 #       Jayme Wilkinson
 #
 #   CREATED
-#       Feb 17, 2025 Initial Version
+#       Feb 17, 2025
 #
 ################################################################################
 #
-#   Copyright (C) 2025 Jayme Wilkinson
+#   Copyright (C) 2025 Linkage Design
 #
 #   The software as information contained herein are propietary to, and
-#   comprise valuable trade secrets of Jayme Wilkinson, whom intends
+#   comprise valuable trade secrets of Linkage Design, whom intends
 #   to preseve as trade secrets such software and information. This sofware
 #   and information or any copies thereof may not be provided or otherwise
 #   made available to any other person or organization.
@@ -26,10 +26,10 @@
 ################################################################################
 PROJECT			= $(lastword $(subst /, ,$(shell pwd)))
 PLATFORM 		= $(shell uname)
-TARGET			= $(strip $(if $(MAKECMDGOALS), $(MAKECMDGOALS), release))
+TARGET			= $(strip $(if $(MAKECMDGOALS), $(MAKECMDGOALS), default))
 
 DATE			= $(shell date "+%b %d, %Y")
-TIME			= $(shell date "+%H:%M:%S")
+TIME			= $(shell date "+%I:%M:%S %p")
 
 COMPANY			= Linkage Design
 LICENSE_FILE	= LICENSE
