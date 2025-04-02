@@ -28,6 +28,8 @@
 import  bpy
 import  mathutils
 
+from    . import prefs
+
 
 ################################################################################
 #
@@ -43,7 +45,19 @@ class VIEW3D_OT_CustomTopView(bpy.types.Operator):
     def execute(self, context):
         '''
         DESCRIPTION
+            This method is called by Blender to execute the operator. It will
+            align the view to a custom top view with the X axis down and Y axis
+            right.
 
+            The view is set to orthographic if the force_ortho property is set to
+            True.
+
+        ARGUMENTS
+            context     (in)    The current context from Blender
+
+        RETURN
+            {'FINISHED'}    The operator was executed successfully
+            {'UNDO'}        The operator was not executed successfully
         '''
         for area in bpy.context.screen.areas:
             if area.type == "VIEW_3D":
@@ -86,18 +100,18 @@ class VIEW3D_PT_CustomTopViewPanel(bpy.types.Panel):
             context     (in)    The current context from Blender
 
         RETURN
-            None
+            {NONE}    The operator was executed successfully
         '''
         #   Get view_align_props from the scene context
         view_align_props = context.scene.view_align_props
 
         #   Create a layout for our panel
-        layout = self.layout
+        parentLayt = self.layout
 
         #   Draw the elements of our panel in the layout
-        row = layout.row()
+        row = parentLayt.row()
         row.prop(view_align_props, "force_ortho")
-        row = layout.row()
+        row = parentLayt.row()
         row.operator("view3d.custom_top_view", icon='CAMERA_DATA')
 
 
@@ -106,8 +120,9 @@ class VIEW3D_PT_CustomTopViewPanel(bpy.types.Panel):
 #   class VIEW3D_OT_CustomTopView(bpy.types.PropertyGroup):
 #
 ################################################################################
-class TopViewProperties(bpy.types.PropertyGroup):
-    force_ortho: bpy.props.BoolProperty(name="Force Orthographic View", default=True) # type: ignore
+class CustomTopViewProperties(bpy.types.PropertyGroup):
+    force_ortho: bpy.props.BoolProperty(name = "Force Orthographic View",
+                                        default = True)
 
 
 ################################################################################
@@ -117,7 +132,8 @@ class TopViewProperties(bpy.types.PropertyGroup):
 ################################################################################
 classes = [ VIEW3D_PT_CustomTopViewPanel,
             VIEW3D_OT_CustomTopView,
-            TopViewProperties ]
+            CustomTopViewProperties,
+            prefs.CustomTopViewPreferences ]
 
 def register():
     '''
@@ -134,7 +150,7 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    bpy.types.Scene.view_align_props = bpy.props.PointerProperty(type=TopViewProperties)
+    bpy.types.Scene.view_align_props = bpy.props.PointerProperty(type = CustomTopViewProperties)
 
 
 def unregister():
