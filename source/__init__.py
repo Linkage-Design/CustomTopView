@@ -30,7 +30,6 @@ import  mathutils
 
 from    . import prefs
 
-
 ################################################################################
 #
 #   class VIEW3D_OT_CustomTopView(bpy.types.Operator):
@@ -121,8 +120,7 @@ class VIEW3D_PT_CustomTopViewPanel(bpy.types.Panel):
 #
 ################################################################################
 class CustomTopViewProperties(bpy.types.PropertyGroup):
-    force_ortho: bpy.props.BoolProperty(name = "Force Orthographic View",
-                                        default = True)
+    force_ortho: bpy.props.BoolProperty(name = "Force Orthographic View", default = True) # type: ignore
 
 
 ################################################################################

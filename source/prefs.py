@@ -28,29 +28,6 @@
 ################################################################################
 import  bpy
 
-from    . import utils
-
-
-###############################################################################
-#
-#   Define Default values for this module here
-#
-###############################################################################
-
-#  Define the URL Locations
-URL_LIST = [
-    ("Report Issues", "github.com/Linkage-Design/CustomTopView/issues"),
-    ("Linkage Design", "linkage-d.com"),
-    ("Superhive", "superhivemarket.com/products/linkage-custom-top-view"),
-    ("Gumroad", "linkagedesign.gumroad.com/l/customtopview"),
-    ("YouTube", "youtube.com/LinkageDesign"),
-    ("Instagram", "instagram.com/LinkageDesign")
-]
-
-#   Define a place to store and process this add-on's icon colletion.
-icon_collection = utils.loadIcons()
-
-
 ###############################################################################
 #
 #   Custom Top View Addon Preferences Class
@@ -77,21 +54,11 @@ class CustomTopViewPreferences(bpy.types.AddonPreferences):
         parentLayt = self.layout
 
         #   Create a new label for the website buttons
-        parentLayt.label(text = "Links to Websites")
+        parentLayt.label(text = "Custom Top View Settings")
 
         #  Create buttons for each url in the URL_LIST
-        for i in range(0, len(URL_LIST), 2):
-            rowLayt = parentLayt.row()
-            for col in (0, 1):
-                try:
-                    #   Get the site and url values from URL_LIST
-                    name, url = URL_LIST[i + col]
-                    iconId = name.replace(' ','')
+        rowLayt = parentLayt.row()
 
-                    #   Create the button
-                    op = rowLayt.operator("wm.url_open", text = name,
-                             icon_value = icon_collection[iconId].icon_id)
-                    op.url = f"https://{url}"
-
-                except IndexError as e:
-                    break
+        #   Create the button for the user to report an issue or request a feature
+        op = rowLayt.operator("wm.url_open", text = "Report Issues / Request Feature", icon = "URL")
+        op.url = "https://www.github.com/Linkage-Design/CustomTopView/issues"
